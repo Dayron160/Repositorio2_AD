@@ -17,7 +17,7 @@ public class HashMap {
      * @param key
      * @param value
      */
-    public void add(String key, Object value){
+    public void anyadir(String key, Object value){
         keys.add(position, key);
         values.add(position, value);
         position++;
