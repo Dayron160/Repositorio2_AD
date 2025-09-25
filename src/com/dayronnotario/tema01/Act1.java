@@ -30,7 +30,7 @@ public class Act1 {
         } else {
             FileReader fr = new FileReader(file);
             BufferedReader br = new BufferedReader(fr);
-            FileWriter fw = new FileWriter(new File(directorio + "/" + fichero + "_conLetras"));
+            FileWriter fw = new FileWriter(new File(directorio + "/" + fichero.substring(0, fichero.lastIndexOf(".")) + "_conLetras" + fichero.substring(fichero.lastIndexOf("."), fichero.length())));
             BufferedWriter bw = new BufferedWriter(fw);
             try {
                 String linea;
