@@ -1,24 +1,31 @@
 package com.dayronnotario.tema01;
 
 import java.io.File;
+import java.time.LocalDate;
+import java.util.Objects;
 
 public class Alumno {
     private String nia;
     private String nombre;
     private String apellido1;
     private String apellido2;
-    private String fechaNacimiento;
-    public Alumno(String nia, String nombre, String apellido1, String apellido2, String fechaNacimiento){
-        this.directorio = directorio;
-        this.fichero = fichero;
-        file = new File(directorio + "/" + fichero);
+    private LocalDate fechaNacimiento;
+    public Alumno(String nia, String nombre, String apellido1, String apellido2, LocalDate fechaNacimiento){
+        this.nia = nia;
+        this.nombre = nombre;
+        this.apellido1 = apellido1;
+        this.apellido2 = apellido2;
+        this.fechaNacimiento = fechaNacimiento;
     }
-    public void setFile(String directorio, String fichero){
-        this.directorio = directorio;
-        this.fichero = fichero;
-        file = new File(directorio + "/" + fichero);
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Alumno alumno)) return false;
+        return Objects.equals(nia, alumno.nia);
     }
-    public File getFile(){
-        return file;
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(nia);
     }
 }

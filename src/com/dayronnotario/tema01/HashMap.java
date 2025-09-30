@@ -13,7 +13,7 @@ public class HashMap {
     }
 
     /**
-     * añade un nuevo valor enlazado a una clave String a la lista
+     * Añade un nuevo valor enlazado a una clave String a la lista
      * @param key
      * @param value
      */
