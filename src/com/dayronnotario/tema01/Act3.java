@@ -28,20 +28,6 @@ public class Act3 {
                 bw.close();
                 fw.close();
             }
-        } else {
-            file.delete();
-            file.createNewFile();
-            password = "S3cret@".getBytes();
-            messageDigest.update(password);
-            encriptado = messageDigest.digest();
-            FileWriter fw = new FileWriter(file);
-            BufferedWriter bw = new BufferedWriter(fw);
-            try {
-                bw.write(Base64.getEncoder().encodeToString(encriptado));
-            } finally {
-                bw.close();
-                fw.close();
-            }
         }
         int opcion;
         do {
@@ -64,6 +50,12 @@ public class Act3 {
         return file;
     }
 
+    /**
+     * Valida que la contraseña escrita sea la misma que la del fichero
+     * @param password2
+     * @return
+     * @throws IOException
+     */
     public boolean validar(byte[] password2) throws IOException {
         messageDigest.update(password2);
         byte[] encriptado2 = messageDigest.digest();
@@ -81,6 +73,10 @@ public class Act3 {
         return false;
     }
 
+    /**
+     * Lanza el menu
+     * @throws IOException
+     */
     public void menu() throws IOException {
         int opcion;
         do {
@@ -101,6 +97,10 @@ public class Act3 {
         } while (opcion != 2);
     }
 
+    /**
+     * Cambia la contraseña del fichero
+     * @throws IOException
+     */
     public void cambiarPassword() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Escribe la nueva contraseña");
