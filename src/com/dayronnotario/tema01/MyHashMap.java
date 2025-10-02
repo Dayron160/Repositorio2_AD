@@ -1,10 +1,13 @@
 package com.dayronnotario.tema01;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MyHashMap<K, V> {
     private int size;
     private Node<K,V>[][] data;
     private int capacity;
-
+    private Node<K, V>[][] resizedData;
 
     public MyHashMap(int capacity) {
         this.capacity = capacity;
@@ -12,27 +15,41 @@ public class MyHashMap<K, V> {
         size = 0;
     }
 
-    private int hash(K key) {
+    private int hash(K key, Node<K, V>[][] matrix) {
         int hash = key.hashCode();
         hash = hash * 31;
         hash = hash & 0x7FFFFFFF;
-        return hash % data.length;
+        return hash % matrix.length;
+    }
+
+    private int hash(K key) {
+        return(hash(key, data));
     }
 
     public V put(K key, V value) {
-        int column = hash(key);
-        int i;
-        for (i = 0; i < data[column].length; i++) {
-            Node<K, V> node = data[column][i];
+        return (put(key, value, data));
+    }
+
+    private V put(K key, V value, Node<K, V>[][] matrix) {
+        int column = hash(key, matrix);
+        int row;
+        Node<K, V> node = null;
+        for (row = 0; row < matrix.length; row++) {
+            node = matrix[row][column];
             if (node == null || node.getKey().equals(key)) {
                 break;
             }
         }
-        if (i == data[column].length) {
-            resize();
+        if (row == matrix.length) {
+            matrix = resize();
         }
-        Node<K, V> oldValue = data[column][i];
-        data[column][i] = new Node<>(key, value);
+        Node<K, V> oldValue = matrix[row][column];
+        matrix[row][column] = new Node<>(key, value);
+        if (node != null) {
+            if (!node.getKey().equals(key)) {
+                size ++;
+            }
+        }
         if (oldValue == null) {
             return null;
         }
@@ -41,8 +58,8 @@ public class MyHashMap<K, V> {
 
     public V get(K key) {
         int column = hash(key);
-        for (int i = 0; i < data[0].length; i++) {
-            Node<K, V> node = data[column][i];
+        for (int row = 0; row < data.length; row++) {
+            Node<K, V> node = data[row][column];
             if (node == null) {
                 return null;
             }
@@ -53,49 +70,48 @@ public class MyHashMap<K, V> {
         return null;
     }
 
-    private void resize() {
-        Node<K,V>[][] data2 = new Node[capacity][capacity + 1];
-        for (int i = 0; i < data.length; i++) {
-            if (data[i][0] != null) {
-                for (int n = 0; n < data[i].length; n++) {
-                    if (data[i][n] == null) {
-                        break;
-                    }
-                    data2[i][n] = data[i][n];
-                }
+    private Node<K, V>[][] resize() {
+        resizedData = new Node[data.length * 2][data.length * 2];
+        size = 0;
+        for (int row = 0; row < data.length; row++) {
+            for (int column = 0; column < data[row].length; column++) {
+                Node<K, V> node = data[row][column];
+                put(node.key, node.value, resizedData);
             }
         }
-        data = data2;
+        data = resizedData;
+        return resizedData;
     }
 
     public V remove(K key) {
         int column = hash(key);
         Node<K, V> position = null;
-        for (int i = 0; i < data[column].length; i++) {
-            Node<K, V> node = data[column][i];
+        for (int row = 0; row < data.length; row++) {
+            Node<K, V> node = data[row][column];
             if (position != null) {
-                if (i != (data[column].length - 1)) {
-                    if (data[column][i + 1] != null) {
-                        data[column][i] = data[column][i + 1];
+                if (row != (data.length - 1)) {
+                    if (data[row + 1][column] != null) {
+                        data[row][column] = data[row + 1][column];
                     } else {
-                        data[column][i] = null;
+                        data[row][column] = null;
                         break;
                     }
-                } else data[column][i] = null;
+                } else data[row][column] = null;
             } else {
                 if (node == null) {
                     System.out.println("Key no encontrada");
                     return null;
                 }
                 if (node.getKey().equals(key)) {
-                    position = data[column][i];
-                    if (i != (data[column].length - 1)) {
-                        if (data[column][i + 1] != null) {
-                            data[column][i] = data[column][i + 1];
+                    position = data[row][column];
+                    size --;
+                    if (row != (data.length - 1)) {
+                        if (data[row + 1][column] != null) {
+                            data[row][column] = data[row + 1][column];
                         } else {
-                            data[column][i] = null;
+                            data[row][column] = null;
                         }
-                    } else data[column][i] = null;
+                    } else data[row][column] = null;
                 }
             }
         }
@@ -104,6 +120,34 @@ public class MyHashMap<K, V> {
         }
         System.out.println("Key no encontrada");
         return null;
+    }
+
+    public List<V> values() {
+        List<V> values = new ArrayList<>();
+        for (int column = 0; column < data[0].length; column++) {
+            for (int row = 0; row < data.length; row++) {
+                Node<K, V> node = data[row][column];
+                if (node == null) {
+                    break;
+                }
+                values.add(node.getValue());
+            }
+        }
+        return values;
+    }
+
+    public List<K> keys() {
+        List<K> keys = new ArrayList<>();
+        for (int column = 0; column < data[0].length; column++) {
+            for (int row = 0; row < data.length; row++) {
+                Node<K, V> node = data[row][column];
+                if (node == null) {
+                    break;
+                }
+                keys.add(node.getKey());
+            }
+        }
+        return keys;
     }
 
     static class Node<K, V> {
