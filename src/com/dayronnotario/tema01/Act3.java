@@ -5,16 +5,19 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Properties;
 
 public class Act3 {
     private final File file;
+    private final Properties properties;
     private final String directorio;
     private byte[] password;
     private byte[] encriptado;
     private final MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
     public Act3(String directorio) throws IOException, NoSuchAlgorithmException {
         this.directorio = directorio;
-        file = new File(directorio + "/properties.txt");
+        properties = new Properties();
+        file = new File(directorio + "/config.properties");
         if (!file.exists()) {
             file.createNewFile();
             password = "S3cret@".getBytes();
@@ -22,11 +25,21 @@ public class Act3 {
             encriptado = messageDigest.digest();
             FileWriter fw = new FileWriter(file);
             BufferedWriter bw = new BufferedWriter(fw);
+            properties.setProperty("passwd", Base64.getEncoder().encodeToString(encriptado));
             try {
-                bw.write(Base64.getEncoder().encodeToString(encriptado));
+                properties.store(bw, "");
             } finally {
                 bw.close();
                 fw.close();
+            }
+        } else {
+            FileReader fr = new FileReader(file);
+            BufferedReader br = new BufferedReader(fr);
+            try {
+                properties.load(br);
+            } finally {
+                br.close();
+                fr.close();
             }
         }
         int opcion;
