@@ -1,16 +1,16 @@
 package com.dayronnotario.tema01;
 
-import java.io.File;
 import java.time.LocalDate;
-import java.util.Objects;
 
 public class Alumno {
-    private String nia;
-    private String nombre;
-    private String apellido1;
-    private String apellido2;
-    private LocalDate fechaNacimiento;
-    public Alumno(String nia, String nombre, String apellido1, String apellido2, LocalDate fechaNacimiento){
+    /** Número de identificación del alumno **/
+    private final String nia;
+    private final String nombre;
+    private final String apellido1;
+    private final String apellido2;
+    private final LocalDate fechaNacimiento;
+
+    public Alumno(String nia, String nombre, String apellido1, String apellido2, LocalDate fechaNacimiento) {
         this.nia = nia;
         this.nombre = nombre;
         this.apellido1 = apellido1;
@@ -18,14 +18,46 @@ public class Alumno {
         this.fechaNacimiento = fechaNacimiento;
     }
 
+    public String getNia() {
+        return nia;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public String getApellido1() {
+        return apellido1;
+    }
+
+    public String getApellido2() {
+        return apellido2;
+    }
+
+    public LocalDate getFechaNacimiento() {
+        return fechaNacimiento;
+    }
+
     @Override
-    public boolean equals(Object o) {
+    public final boolean equals(Object o) {
         if (!(o instanceof Alumno alumno)) return false;
-        return Objects.equals(nia, alumno.nia);
+
+        return nia.equals(alumno.nia);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(nia);
+        return nia.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "Alumno{" +
+                "nia='" + nia + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", apellido1='" + apellido1 + '\'' +
+                ", apellido2='" + apellido2 + '\'' +
+                ", fechaNacimiento=" + fechaNacimiento +
+                '}';
     }
 }

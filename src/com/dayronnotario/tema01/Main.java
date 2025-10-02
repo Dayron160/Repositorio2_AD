@@ -9,8 +9,12 @@ public class Main {
         System.out.println("HashMap");
         System.out.println();
 
-        HashMap hashmap = new HashMap("Dayron", 1);
-        System.out.println(hashmap.getValue("Dayron"));
+        MyHashMap hashmap = new MyHashMap(1);
+        hashmap.put("FB", 16);
+        hashmap.put("Ea", 18);
+        System.out.println(hashmap.get("FB"));
+        hashmap.remove("Ea");
+        System.out.println(hashmap.get("Ea"));
 
         System.out.println();
         System.out.println("Act1");
